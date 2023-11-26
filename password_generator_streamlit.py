@@ -31,6 +31,22 @@ def generate_password(length, num_passwords):
 
     return passwords
 
+# Function to generate HTML code for the "Copy" button
+def copy_button(password):
+    return f"""
+    <button onclick="copyToClipboard('{password}')">Copy</button>
+    <script>
+        function copyToClipboard(text) {{
+            var textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            alert("Password copied to clipboard!");
+        }}
+    </script>
+    """
 
 # Streamlit UI
 st.title("Random Password Generator")
@@ -47,7 +63,8 @@ if st.button("Generate Passwords"):
     generated_passwords = generate_password(length, num_passwords)
     st.success("Passwords generated successfully!")
 
-    # Display the generated passwords
+    # Display the generated passwords with "Copy" button
     st.subheader("Generated Passwords:")
     for password in generated_passwords:
-        st.text(password)
+        st.write(password, unsafe_allow_html=True)
+        st.markdown(copy_button(password), unsafe_allow_html=True)
